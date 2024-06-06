@@ -44,5 +44,5 @@ def get_merchant_info() -> dict:
 if __name__ == "__main__":
     print("Access localhost:5000/oauth in a browser to initiate the oauth flow")
     print("Then go to localhost:5000/merchant to see your merchant info")
-    app.run(host="localhost", port=5173, debug=True)
+    app.run(host="localhost", port=5000, debug=True)
 
