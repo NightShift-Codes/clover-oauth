@@ -1,0 +1,5 @@
+access_token
+merchant_id
+.env
+.venv
+__pycache__

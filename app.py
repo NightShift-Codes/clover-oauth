@@ -1,10 +1,11 @@
-from flask import Flask
+from flask import Flask, redirect
 from util import get_merchant_info_clover
 from oauth_callback import clover_oauth_callback
 from flask import request
 from config import AUTHORIZE_URL, CLIENT_ID
 import os
 from html_templates import BEGIN_TEMPLATE, END_TEMPLATE
+import time
 
 app = Flask(__file__)
 
@@ -17,8 +18,14 @@ OAUTH_ARGS = [
 
 @app.get("/")
 def main_page():
+    # detect if this is the redirect after logging into Clover
     if all(map(lambda x: x in request.args, OAUTH_ARGS)):
-        clover_oauth_callback(query_data=request.args)
+        time.sleep(3)  # give it some time to think if we just connected the app
+        try:
+            clover_oauth_callback(query_data=request.args)
+        except:
+            # the initial redirect doesn't work at first... so just redirect again.
+            return redirect(f"{AUTHORIZE_URL}?client_id={CLIENT_ID}")
     
     if all(map(os.path.isfile, ("merchant_id", "access_token"))):
         return END_TEMPLATE.format(AUTHORIZE_URL=AUTHORIZE_URL, CLIENT_ID=CLIENT_ID)
